@@ -6,6 +6,7 @@ export default function Home() {
       <Head>
         <title>Todo app</title>
       </Head>
+      <p className="font-bold">Hello there</p>
     </>
   );
 }
