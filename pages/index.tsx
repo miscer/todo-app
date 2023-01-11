@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { ListSelector } from "@/components/list-selector";
+import { ListSelector } from "@/components/list-selector/list-selector";
 
 export default function Home() {
   return (
