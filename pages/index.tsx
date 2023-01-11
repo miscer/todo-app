@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { ListSelector } from "@/components/list-selector";
 
 export default function Home() {
   return (
@@ -6,7 +7,7 @@ export default function Home() {
       <Head>
         <title>Todo app</title>
       </Head>
-      <p className="font-bold">Hello there</p>
+      <ListSelector />
     </>
   );
 }
