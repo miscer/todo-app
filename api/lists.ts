@@ -9,6 +9,6 @@ const lists: List[] = [
   },
 ];
 
-export const fetchLists = rest.get("/lists", (req, res, ctx) => {
+export const fetchLists = rest.get("/api/lists", (req, res, ctx) => {
   return res(ctx.status(200), ctx.json({ lists }));
 });
