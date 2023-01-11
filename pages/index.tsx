@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { ListSelector } from "@/components/list-selector/list-selector";
+import { AppLayout } from "@/components/app-layout/app-layout";
 
 export default function Home() {
   return (
@@ -7,7 +7,7 @@ export default function Home() {
       <Head>
         <title>Todo app</title>
       </Head>
-      <ListSelector />
+      <AppLayout />
     </>
   );
 }
