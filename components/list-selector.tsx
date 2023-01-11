@@ -1,11 +1,5 @@
 import useSWR from "swr";
-import { List } from "../api/types";
-
-async function fetchLists() {
-  const response = await fetch("/api/lists");
-  const data = await response.json();
-  return data.lists as List[];
-}
+import { fetchLists } from "@/api-client";
 
 export function ListSelector() {
   const { data: lists } = useSWR("lists", fetchLists);

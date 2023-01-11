@@ -15,7 +15,9 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/components/*": ["components/*"]
+      "@/components/*": ["components/*"],
+      "@/api-server/*": ["api-server/*"],
+      "@/api-client": ["api-client"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
