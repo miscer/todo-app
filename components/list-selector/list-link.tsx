@@ -12,7 +12,7 @@ export function ListLink(props: Props) {
   const router = useRouter();
   const { listId, title, color } = props;
   const href = `/lists/${listId}`;
-  const active = router.pathname.startsWith(href);
+  const active = router.asPath.startsWith(href);
 
   return (
     <Link
@@ -23,6 +23,7 @@ export function ListLink(props: Props) {
         className="block w-4 h-4 rounded-full group-hover:scale-110 transition"
         style={{ backgroundColor: color }}
       />
+
       <span className={clsx(active ? "font-bold" : null)}>{title}</span>
     </Link>
   );
