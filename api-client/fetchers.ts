@@ -1,3 +1,16 @@
+export async function apiFetcher(key: string) {
+  const url = "/api/" + key;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch resource, got response ${response.status}`
+    );
+  }
+
+  return await response.json();
+}
+
 export async function createFetcher(key: string, options: any) {
   const url = "/api/" + key;
   const body = JSON.stringify(options.arg);

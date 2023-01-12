@@ -1,18 +1,16 @@
 import Head from "next/head";
 import { AppLayout } from "@/components/app-layout/app-layout";
 import useSWR from "swr";
-import { fetchList } from "@/api-client";
 import { useRouter } from "next/router";
 import { getRouteParam } from "../../utils/router";
 import { ListItems } from "@/components/list-items/list-items";
+import { apiFetcher } from "../../api-client/fetchers";
+import { List } from "@/api-server/types";
 
 export default function ListDetail() {
   const router = useRouter();
   const listId = getRouteParam(router.query, "list");
-
-  const { data } = useSWR(["lists", listId], () =>
-    listId != null ? fetchList(listId) : null
-  );
+  const { data } = useSWR<List>(`lists/${listId}`, apiFetcher);
 
   return (
     <>
