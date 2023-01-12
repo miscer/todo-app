@@ -16,9 +16,10 @@ export function ListItems(props: Props) {
     [items]
   );
 
-  const nextWeight = items
-    ? Math.max(...items.map((item) => item.weight)) + 1
-    : 0;
+  const nextWeight =
+    items != null && items.length > 0
+      ? Math.max(...items.map((item) => item.weight)) + 1
+      : 0;
 
   return (
     <div>
