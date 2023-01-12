@@ -1,3 +1,3 @@
-import { fetchLists } from "./lists";
+import { fetchList, fetchLists } from "./lists";
 
-export const handlers = [fetchLists];
+export const handlers = [fetchLists, fetchList];

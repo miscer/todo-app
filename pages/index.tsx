@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Todo app</title>
+        <title>Toodles</title>
       </Head>
       <AppLayout />
     </>

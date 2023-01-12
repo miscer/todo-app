@@ -15,7 +15,7 @@ export function AppLayout(props: Props) {
           Tood<span className="text-purple-500">les</span>
         </h1>
         <div className="flex items-stretch">
-          <div className="w-64">
+          <div className="w-64 mr-4">
             <ListSelector />
           </div>
           <div className="grow">{children}</div>

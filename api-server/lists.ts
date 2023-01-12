@@ -17,3 +17,13 @@ const lists: List[] = [
 export const fetchLists = rest.get("/api/lists", (req, res, ctx) => {
   return res(ctx.status(200), ctx.json({ lists }));
 });
+
+export const fetchList = rest.get("/api/lists/:listId", (req, res, ctx) => {
+  const list = lists.find((list) => list.id === req.params.listId);
+
+  if (list == null) {
+    return res(ctx.status(404));
+  }
+
+  return res(ctx.status(200), ctx.json(list));
+});
