@@ -1,9 +1,7 @@
-import useSWR from "swr";
 import { useMemo } from "react";
 import { ListItem } from "@/components/list-items/list-item";
 import { AddItem } from "@/components/list-items/add-item";
-import { apiFetcher } from "../../api-client/fetchers";
-import { Item } from "@/api-server/types";
+import { useListItems } from "@/hooks/api/items";
 
 interface Props {
   listId: string;
@@ -11,20 +9,15 @@ interface Props {
 
 export function ListItems(props: Props) {
   const { listId } = props;
-
-  const { data } = useSWR<{ items: Item[] }>(
-    `lists/${listId}/items`,
-    apiFetcher
-  );
+  const { items } = useListItems(listId);
 
   const sorted = useMemo(
-    () =>
-      data?.items ? [...data.items].sort((a, b) => a.weight - b.weight) : null,
-    [data?.items]
+    () => (items ? [...items].sort((a, b) => a.weight - b.weight) : null),
+    [items]
   );
 
-  const nextWeight = data?.items
-    ? Math.max(...data.items.map((item) => item.weight)) + 1
+  const nextWeight = items
+    ? Math.max(...items.map((item) => item.weight)) + 1
     : 0;
 
   return (

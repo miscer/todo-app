@@ -1,6 +1,5 @@
 import { FormEvent, useCallback, useState } from "react";
-import useSWRMutation from "swr/mutation";
-import { createFetcher } from "../../api-client/fetchers";
+import { useCreateListItem } from "@/hooks/api/items";
 
 interface Props {
   listId: string;
@@ -9,17 +8,14 @@ interface Props {
 
 export function AddItem(props: Props) {
   const { listId, weight } = props;
-  const { trigger, isMutating } = useSWRMutation(
-    `lists/${listId}/items`,
-    createFetcher
-  );
+  const { createListItem, isLoading } = useCreateListItem(listId);
   const [title, setTitle] = useState("");
 
   const handleSubmit = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
 
-      trigger({
+      createListItem({
         title,
         weight,
         notes: "",
@@ -29,7 +25,7 @@ export function AddItem(props: Props) {
         setTitle("");
       });
     },
-    [title, trigger, weight]
+    [title, createListItem, weight]
   );
 
   return (
@@ -38,7 +34,7 @@ export function AddItem(props: Props) {
         <input
           type="text"
           placeholder="Quick add..."
-          disabled={isMutating}
+          disabled={isLoading}
           value={title}
           onChange={(event) => {
             setTitle(event.target.value);
