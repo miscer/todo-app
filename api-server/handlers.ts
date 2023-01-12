@@ -1,4 +1,4 @@
 import { fetchList, fetchLists } from "./lists";
-import { fetchListItems } from "./items";
+import { createListItem, fetchListItems } from "./items";
 
-export const handlers = [fetchLists, fetchList, fetchListItems];
+export const handlers = [fetchLists, fetchList, fetchListItems, createListItem];

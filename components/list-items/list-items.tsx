@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { fetchListItems } from "@/api-client";
 import { useMemo } from "react";
 import { ListItem } from "@/components/list-items/list-item";
+import { AddItem } from "@/components/list-items/add-item";
 
 interface Props {
   listId: string;
@@ -10,7 +11,7 @@ interface Props {
 export function ListItems(props: Props) {
   const { listId } = props;
 
-  const { data: items } = useSWR(["lists", listId, "items"], () =>
+  const { data: items } = useSWR(`lists/${listId}/items`, () =>
     fetchListItems(listId)
   );
 
@@ -19,13 +20,19 @@ export function ListItems(props: Props) {
     [items]
   );
 
+  const nextWeight = items
+    ? Math.max(...items.map((item) => item.weight)) + 1
+    : 0;
+
   return (
     <div>
-      <ul className="divide-y divide-slate-200">
+      <ul className="divide-y divide-slate-200 border-b border-slate-200">
         {sorted?.map((item) => (
           <ListItem key={item.id} item={item} />
         ))}
       </ul>
+
+      <AddItem listId={listId} weight={nextWeight} />
     </div>
   );
 }

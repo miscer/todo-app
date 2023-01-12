@@ -1,5 +1,7 @@
 import { Item } from "@/api-server/types";
+import { v4 as uuid } from "uuid";
 import { rest } from "msw";
+import { z } from "zod";
 
 const items: Item[] = [
   {
@@ -29,3 +31,30 @@ export const fetchListItems = rest.get(
     return res(ctx.status(200), ctx.json({ items: listItems }));
   }
 );
+
+export const createListItem = rest.post(
+  "/api/lists/:listId/items",
+  async (req, res, ctx) => {
+    const { listId } = req.params;
+
+    if (typeof listId !== "string") {
+      throw new Error("Invalid list ID parameter");
+    }
+
+    const data = await req.json();
+    const attributes = listItemSchema.parse(data);
+
+    const listItem = { id: uuid(), listId, ...attributes };
+    items.push(listItem);
+
+    return res(ctx.status(201), ctx.json(listItem));
+  }
+);
+
+const listItemSchema = z.object({
+  title: z.string(),
+  dueAt: z.string().datetime().nullable(),
+  completedAt: z.string().datetime().nullable(),
+  notes: z.string(),
+  weight: z.number(),
+});
