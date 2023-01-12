@@ -7,8 +7,8 @@ export interface List {
 export interface Item {
   id: string;
   title: string;
-  dueAt: string;
-  completedAt: string;
+  dueAt: string | null;
+  completedAt: string | null;
   listId: string;
   notes: string;
   weight: number;

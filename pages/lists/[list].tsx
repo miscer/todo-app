@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { fetchList } from "@/api-client";
 import { useRouter } from "next/router";
 import { getRouteParam } from "../../utils/router";
+import { ListItems } from "@/components/list-items/list-items";
 
 export default function ListDetail() {
   const router = useRouter();
@@ -19,10 +20,12 @@ export default function ListDetail() {
         <title>{data?.title}</title>
       </Head>
       <AppLayout>
-        <div className="p-4 border border-slate-400 rounded">
-          <h2 className="font-bold text-xl" style={{ color: data?.color }}>
+        <div className="px-4 border border-slate-400 rounded">
+          <h2 className="my-4 font-bold text-xl" style={{ color: data?.color }}>
             {data?.title}
           </h2>
+
+          {listId != null ? <ListItems listId={listId} /> : null}
         </div>
       </AppLayout>
     </>
