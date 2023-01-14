@@ -1,83 +1,114 @@
-import useSWR from "swr";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
 import { Item } from "@/api-server/types";
 import {
   createDeleteFetcher,
   createReadFetcher,
   createUpdateFetcher,
 } from "./fetchers";
-import useSWRMutation from "swr/mutation";
-import { useCallback } from "react";
 
 export function useListItems(listId: string) {
   const query = new URLSearchParams();
-  query.set("list", listId ?? "x");
+  query.set("list", listId);
 
-  const { data, error, isLoading } = useSWR<{ items: Item[] }>(
-    ["lists", listId, "items"],
-    createReadFetcher(`/api/items?${query}`)
-  );
+  const { data, error, isLoading } = useQuery<{ items: Item[] }>({
+    queryKey: ["items", listId],
+    queryFn: createReadFetcher(`/api/items?${query}`),
+  });
 
   return [data?.items, { error, isLoading }] as const;
 }
 
 export function useListItem(listId: string, itemId: string) {
-  const { data, error, isLoading } = useSWR<Item>(
-    ["lists", listId, "items", itemId],
-    createReadFetcher(`/api/items/${itemId}`)
-  );
+  const { data, error, isLoading } = useQuery<Item>({
+    queryKey: ["item", itemId],
+    queryFn: createReadFetcher(`/api/items/${itemId}`),
+  });
 
   return [data, { error, isLoading }] as const;
 }
 
-export function useCreateListItem(listId: string) {
-  const { trigger, error, isMutating } = useSWRMutation(
-    ["lists", listId, "items"],
-    createUpdateFetcher(`/api/items`, "POST")
-  );
+type Attributes = Omit<Item, "id">;
 
-  return [trigger, { error, isLoading: isMutating }] as const;
+export function useCreateListItem(listId: string) {
+  const queryClient = useQueryClient();
+
+  const { mutate, error, isLoading } = useMutation<
+    unknown,
+    unknown,
+    Attributes
+  >({
+    mutationFn: createUpdateFetcher(`/api/items`, "POST"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items", listId] });
+    },
+  });
+
+  return [mutate, { error, isLoading }] as const;
 }
 
 export function useUpdateListItem(listId: string, itemId: string) {
-  const { trigger, error, isMutating } = useSWRMutation(
-    ["lists", listId, "items", itemId],
-    createUpdateFetcher(`/api/items/${itemId}`, "PUT")
-  );
+  const queryClient = useQueryClient();
 
-  return [trigger, { error, isLoading: isMutating }] as const;
+  const { mutate, error, isLoading } = useMutation<
+    Item,
+    unknown,
+    Partial<Attributes>
+  >({
+    mutationFn: createUpdateFetcher(`/api/items/${itemId}`, "PUT"),
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+      queryClient.setQueryData(["item", itemId], data);
+    },
+  });
+
+  return [mutate, { error, isLoading }] as const;
 }
 
 export function useDeleteListItem(listId: string, itemId: string) {
-  const { trigger, error, isMutating } = useSWRMutation(
-    ["lists", listId, "items"],
-    createDeleteFetcher(`/api/items/${itemId}`)
-  );
+  const queryClient = useQueryClient();
 
-  return [trigger, { error, isLoading: isMutating }] as const;
+  const { mutate, error, isLoading } = useMutation({
+    mutationFn: createDeleteFetcher(`/api/items/${itemId}`),
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+    },
+  });
+
+  return [mutate, { error, isLoading }] as const;
 }
 
 export function useMarkListItemDone(listId: string, itemId: string) {
-  const { trigger, error, isMutating } = useSWRMutation(
-    ["lists", listId, "items"],
-    createUpdateFetcher(`/api/items/${itemId}`, "PUT")
-  );
+  const queryClient = useQueryClient();
+
+  const { mutate, error, isLoading } = useMutation({
+    mutationFn: createUpdateFetcher(`/api/items/${itemId}`, "PUT"),
+    onMutate(attributes) {
+      queryClient.setQueryData<{ items: Item[] }>(
+        ["items", listId],
+        function (data) {
+          if (data == null) return undefined;
+
+          const items = data.items.map((item) =>
+            item.id === itemId ? { ...item, ...attributes } : item
+          );
+
+          return { ...data, items };
+        }
+      );
+    },
+    onSettled() {
+      queryClient.invalidateQueries(["items", listId]);
+    },
+  });
 
   const setDone = useCallback(
     (done: boolean) => {
       const completedAt = done ? new Date().toISOString() : null;
-
-      function optimisticData(data: { items: Item[] }) {
-        const items = data.items.map((item) =>
-          item.id === itemId ? { ...item, completedAt } : item
-        );
-
-        return { ...data, items };
-      }
-
-      return trigger({ completedAt }, { optimisticData });
+      return mutate({ completedAt });
     },
-    [trigger, itemId]
+    [mutate]
   );
 
-  return [setDone, { error, isLoading: isMutating }] as const;
+  return [setDone, { error, isLoading }] as const;
 }

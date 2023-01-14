@@ -12,8 +12,8 @@ export const createReadFetcher = (url: string) => async () => {
 
 export const createUpdateFetcher =
   (url: string, method = "POST") =>
-  async (_key: any, options: any) => {
-    const body = JSON.stringify(options.arg);
+  async (data: any) => {
+    const body = JSON.stringify(data);
     const response = await fetch(url, { method, body });
 
     if (!response.ok) {

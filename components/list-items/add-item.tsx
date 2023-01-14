@@ -15,15 +15,19 @@ export function AddItem(props: Props) {
     (event: FormEvent) => {
       event.preventDefault();
 
-      create({
+      const attributes = {
         title,
         weight,
         notes: "",
         dueAt: null,
         completedAt: null,
         listId,
-      }).then(() => {
-        setTitle("");
+      };
+
+      create(attributes, {
+        onSuccess() {
+          setTitle("");
+        },
       });
     },
     [title, create, weight, listId]

@@ -18,7 +18,7 @@ interface FormData {
 export function ListItemForm(props: Props) {
   const { item } = props;
   const router = useRouter();
-  const [update] = useUpdateListItem(item.listId, item.id);
+  const [updateItem] = useUpdateListItem(item.listId, item.id);
   const [deleteItem] = useDeleteListItem(item.listId, item.id);
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -30,19 +30,25 @@ export function ListItemForm(props: Props) {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await update({
+    const attributes = {
       title: data.title,
       notes: data.notes,
       completedAt: data.done ? new Date().toISOString() : null,
       dueAt: data.deadline ? new Date(data.deadline).toISOString() : null,
-    });
+    };
 
-    router.push(`/lists/${item.listId}`);
+    updateItem(attributes, {
+      onSuccess() {
+        router.push(`/lists/${item.listId}`);
+      },
+    });
   });
 
   const onDelete = () => {
-    deleteItem().then(() => {
-      router.push(`/lists/${item.listId}`);
+    deleteItem(undefined, {
+      onSuccess() {
+        router.push(`/lists/${item.listId}`);
+      },
     });
   };
 
