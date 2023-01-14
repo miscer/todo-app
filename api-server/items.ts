@@ -24,13 +24,15 @@ const items: Item[] = [
   },
 ];
 
-export const fetchListItems = rest.get(
-  "/api/lists/:listId/items",
-  (req, res, ctx) => {
-    const listItems = items.filter((item) => item.listId === req.params.listId);
-    return res(ctx.status(200), ctx.json({ items: listItems }));
-  }
-);
+export const fetchListItems = rest.get("/api/items", (req, res, ctx) => {
+  const { searchParams: query } = req.url;
+
+  const listItems = items.filter((item) =>
+    query.has("list") ? item.listId === query.get("list") : true
+  );
+
+  return res(ctx.status(200), ctx.json({ items: listItems }));
+});
 
 export const fetchListItem = rest.get(
   "/api/items/:itemId",
@@ -49,24 +51,15 @@ export const fetchListItem = rest.get(
   }
 );
 
-export const createListItem = rest.post(
-  "/api/lists/:listId/items",
-  async (req, res, ctx) => {
-    const { listId } = req.params;
+export const createListItem = rest.post("/api/items", async (req, res, ctx) => {
+  const data = await req.json();
+  const attributes = listItemSchema.parse(data);
 
-    if (typeof listId !== "string") {
-      throw new Error("Invalid list ID parameter");
-    }
+  const listItem = { id: uuid(), ...attributes };
+  items.push(listItem);
 
-    const data = await req.json();
-    const attributes = listItemSchema.parse(data);
-
-    const listItem = { id: uuid(), listId, ...attributes };
-    items.push(listItem);
-
-    return res(ctx.status(201), ctx.json(listItem));
-  }
-);
+  return res(ctx.status(201), ctx.json(listItem));
+});
 
 export const updateListItem = rest.put(
   "/api/items/:itemId",
@@ -85,6 +78,7 @@ export const updateListItem = rest.put(
     }
 
     items[index] = { ...items[index], ...attributes };
+
     return res(ctx.status(200), ctx.json(items[index]), ctx.delay(300));
   }
 );
@@ -109,6 +103,7 @@ export const deleteListItem = rest.delete(
 );
 
 const listItemSchema = z.object({
+  listId: z.string(),
   title: z.string(),
   dueAt: z.string().datetime().nullable(),
   completedAt: z.string().datetime().nullable(),

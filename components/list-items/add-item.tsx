@@ -21,11 +21,12 @@ export function AddItem(props: Props) {
         notes: "",
         dueAt: null,
         completedAt: null,
+        listId,
       }).then(() => {
         setTitle("");
       });
     },
-    [title, create, weight]
+    [title, create, weight, listId]
   );
 
   return (
