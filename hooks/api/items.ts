@@ -31,6 +31,15 @@ export function useCreateListItem(listId: string | null) {
   return { create: trigger, error, isLoading: isMutating };
 }
 
+export function useUpdateListItem(listId: string, itemId: string) {
+  const { trigger, error, isMutating } = useSWRMutation(
+    ["lists", listId, "items", itemId],
+    createUpdateFetcher(`/api/items/${itemId}`, "PUT")
+  );
+
+  return { update: trigger, error, isLoading: isMutating };
+}
+
 export function useMarkListItemDone(listId: string, itemId: string) {
   const { trigger, error, isMutating } = useSWRMutation(
     ["lists", listId, "items"],
