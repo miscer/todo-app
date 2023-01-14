@@ -1,6 +1,10 @@
 import useSWR from "swr";
 import { Item } from "@/api-server/types";
-import { createReadFetcher, createUpdateFetcher } from "./fetchers";
+import {
+  createDeleteFetcher,
+  createReadFetcher,
+  createUpdateFetcher,
+} from "./fetchers";
 import useSWRMutation from "swr/mutation";
 import { useCallback } from "react";
 
@@ -38,6 +42,15 @@ export function useUpdateListItem(listId: string, itemId: string) {
   );
 
   return { update: trigger, error, isLoading: isMutating };
+}
+
+export function useDeleteListItem(listId: string, itemId: string) {
+  const { trigger, error, isMutating } = useSWRMutation(
+    ["lists", listId, "items"],
+    createDeleteFetcher(`/api/items/${itemId}`)
+  );
+
+  return [trigger, { error, isLoading: isMutating }] as const;
 }
 
 export function useMarkListItemDone(listId: string, itemId: string) {

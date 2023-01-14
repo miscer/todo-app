@@ -2,7 +2,7 @@ import { Item } from "@/api-server/types";
 import { Button, Input, Label, TextArea } from "@/components/forms";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { useUpdateListItem } from "@/hooks/api/items";
+import { useDeleteListItem, useUpdateListItem } from "@/hooks/api/items";
 
 interface Props {
   item: Item;
@@ -19,6 +19,7 @@ export function ListItemForm(props: Props) {
   const { item } = props;
   const router = useRouter();
   const { update } = useUpdateListItem(item.listId, item.id);
+  const [deleteItem] = useDeleteListItem(item.listId, item.id);
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
       title: item.title,
@@ -38,6 +39,12 @@ export function ListItemForm(props: Props) {
 
     router.push(`/lists/${item.listId}`);
   });
+
+  const onDelete = () => {
+    deleteItem().then(() => {
+      router.push(`/lists/${item.listId}`);
+    });
+  };
 
   const onCancel = () => {
     router.push(`/lists/${item.listId}`);
@@ -81,7 +88,7 @@ export function ListItemForm(props: Props) {
           <Button variant="secondary" type="button" onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="danger" type="button">
+          <Button variant="danger" type="button" onClick={onDelete}>
             Delete
           </Button>
         </div>

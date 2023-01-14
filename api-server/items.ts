@@ -89,6 +89,25 @@ export const updateListItem = rest.put(
   }
 );
 
+export const deleteListItem = rest.delete(
+  "/api/items/:itemId",
+  async (req, res, ctx) => {
+    const { itemId } = req.params;
+    if (typeof itemId !== "string") {
+      throw new Error("Invalid item ID parameter");
+    }
+
+    const index = items.findIndex((item) => item.id === itemId);
+    if (index < 0) {
+      return res(ctx.status(404));
+    }
+
+    items.splice(index, 1);
+
+    return res(ctx.status(200), ctx.delay(300));
+  }
+);
+
 const listItemSchema = z.object({
   title: z.string(),
   dueAt: z.string().datetime().nullable(),

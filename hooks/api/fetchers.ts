@@ -24,3 +24,15 @@ export const createUpdateFetcher =
 
     return await response.json();
   };
+
+export const createDeleteFetcher =
+  (url: string, method = "DELETE") =>
+  async (_key: any) => {
+    const response = await fetch(url, { method });
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to delete resource, got response ${response.status}`
+      );
+    }
+  };
