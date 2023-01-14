@@ -8,7 +8,7 @@ import {
 import useSWRMutation from "swr/mutation";
 import { useCallback } from "react";
 
-export function useListItems(listId: string | null) {
+export function useListItems(listId: string) {
   const query = new URLSearchParams();
   query.set("list", listId ?? "x");
 
@@ -20,7 +20,7 @@ export function useListItems(listId: string | null) {
   return { items: data?.items, error, isLoading };
 }
 
-export function useListItem(listId: string | null, itemId: string | null) {
+export function useListItem(listId: string, itemId: string) {
   const { data, error, isLoading } = useSWR<Item>(
     ["lists", listId, "items", itemId],
     createReadFetcher(`/api/items/${itemId}`)
@@ -29,7 +29,7 @@ export function useListItem(listId: string | null, itemId: string | null) {
   return { item: data, error, isLoading };
 }
 
-export function useCreateListItem(listId: string | null) {
+export function useCreateListItem(listId: string) {
   const { trigger, error, isMutating } = useSWRMutation(
     ["lists", listId, "items"],
     createUpdateFetcher(`/api/items`, "POST")

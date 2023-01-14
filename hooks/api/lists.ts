@@ -11,7 +11,7 @@ export function useLists() {
   return { lists: data?.lists, error, isLoading };
 }
 
-export function useList(listId: string | null) {
+export function useList(listId: string) {
   const { data, error, isLoading } = useSWR<List>(
     ["lists", listId],
     createReadFetcher(`/api/lists/${listId}`)

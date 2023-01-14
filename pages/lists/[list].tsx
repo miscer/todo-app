@@ -8,7 +8,17 @@ import { useList } from "@/hooks/api/lists";
 export default function ListDetail() {
   const router = useRouter();
   const listId = getRouteParam(router.query, "list");
-  const { list } = useList(listId);
+  if (listId == null) return null;
+
+  return <Content listId={listId} />;
+}
+
+interface Props {
+  listId: string;
+}
+
+function Content(props: Props) {
+  const { list } = useList(props.listId);
 
   return (
     <>
@@ -21,7 +31,7 @@ export default function ListDetail() {
             {list?.title}
           </h2>
 
-          {listId != null ? <ListItems listId={listId} /> : null}
+          <ListItems listId={props.listId} />
         </div>
       </AppLayout>
     </>
