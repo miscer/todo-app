@@ -1,11 +1,11 @@
 import { List } from "@/api-server/types";
 import useSWR from "swr";
-import { apiFetcher } from "./fetchers";
+import { createReadFetcher } from "./fetchers";
 
 export function useLists() {
   const { data, error, isLoading } = useSWR<{ lists: List[] }>(
-    "lists",
-    apiFetcher
+    ["lists"],
+    createReadFetcher("/api/lists")
   );
 
   return { lists: data?.lists, error, isLoading };
@@ -13,8 +13,8 @@ export function useLists() {
 
 export function useList(listId: string | null) {
   const { data, error, isLoading } = useSWR<List>(
-    `lists/${listId}`,
-    apiFetcher
+    ["lists", listId],
+    createReadFetcher(`/api/lists/${listId}`)
   );
 
   return { list: data, error, isLoading };

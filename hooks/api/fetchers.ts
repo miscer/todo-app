@@ -1,5 +1,4 @@
-export async function apiFetcher(key: string) {
-  const url = "/api/" + key;
+export const createReadFetcher = (url: string) => async (_key: string) => {
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -9,11 +8,11 @@ export async function apiFetcher(key: string) {
   }
 
   return await response.json();
-}
+};
 
 export const createUpdateFetcher =
   (url: string, method = "POST") =>
-  async (_key: string, options: any) => {
+  async (_key: any, options: any) => {
     const body = JSON.stringify(options.arg);
     const response = await fetch(url, { method, body });
 

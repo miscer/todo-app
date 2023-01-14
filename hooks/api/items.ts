@@ -1,13 +1,13 @@
 import useSWR from "swr";
 import { Item } from "@/api-server/types";
-import { apiFetcher, createUpdateFetcher } from "./fetchers";
+import { createReadFetcher, createUpdateFetcher } from "./fetchers";
 import useSWRMutation from "swr/mutation";
 import { useCallback } from "react";
 
 export function useListItems(listId: string | null) {
   const { data, error, isLoading } = useSWR<{ items: Item[] }>(
-    `lists/${listId}/items`,
-    apiFetcher
+    ["lists", listId, "items"],
+    createReadFetcher(`/api/lists/${listId}/items`)
   );
 
   return { items: data?.items, error, isLoading };
@@ -15,7 +15,7 @@ export function useListItems(listId: string | null) {
 
 export function useCreateListItem(listId: string | null) {
   const { trigger, error, isMutating } = useSWRMutation(
-    `lists/${listId}/items`,
+    ["lists", listId, "items"],
     createUpdateFetcher(`/api/lists/${listId}/items`, "POST")
   );
 
@@ -24,7 +24,7 @@ export function useCreateListItem(listId: string | null) {
 
 export function useMarkListItemDone(listId: string, itemId: string) {
   const { trigger, error, isMutating } = useSWRMutation(
-    `lists/${listId}/items`,
+    ["lists", listId, "items"],
     createUpdateFetcher(`/api/items/${itemId}`, "PUT")
   );
 
