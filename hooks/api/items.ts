@@ -13,6 +13,15 @@ export function useListItems(listId: string | null) {
   return { items: data?.items, error, isLoading };
 }
 
+export function useListItem(listId: string | null, itemId: string | null) {
+  const { data, error, isLoading } = useSWR<Item>(
+    ["lists", listId, "items", itemId],
+    createReadFetcher(`/api/items/${itemId}`)
+  );
+
+  return { item: data, error, isLoading };
+}
+
 export function useCreateListItem(listId: string | null) {
   const { trigger, error, isMutating } = useSWRMutation(
     ["lists", listId, "items"],

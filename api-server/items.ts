@@ -32,6 +32,23 @@ export const fetchListItems = rest.get(
   }
 );
 
+export const fetchListItem = rest.get(
+  "/api/items/:itemId",
+  async (req, res, ctx) => {
+    const { itemId } = req.params;
+    if (typeof itemId !== "string") {
+      throw new Error("Invalid item ID parameter");
+    }
+
+    const index = items.findIndex((item) => item.id === itemId);
+    if (index < 0) {
+      return res(ctx.status(404));
+    }
+
+    return res(ctx.status(200), ctx.json(items[index]));
+  }
+);
+
 export const createListItem = rest.post(
   "/api/lists/:listId/items",
   async (req, res, ctx) => {
@@ -56,7 +73,7 @@ export const updateListItem = rest.put(
   async (req, res, ctx) => {
     const { itemId } = req.params;
     if (typeof itemId !== "string") {
-      throw new Error("Invalid list ID parameter");
+      throw new Error("Invalid item ID parameter");
     }
 
     const data = await req.json();

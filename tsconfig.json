@@ -17,6 +17,7 @@
     "paths": {
       "@/components/*": ["components/*"],
       "@/hooks/*": ["hooks/*"],
+      "@/utils/*": ["utils/*"],
       "@/api-server/*": ["api-server/*"],
       "@/api-client": ["api-client"]
     }
