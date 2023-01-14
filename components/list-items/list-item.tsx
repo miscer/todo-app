@@ -12,7 +12,7 @@ interface Props {
 export function ListItem(props: Props) {
   const { item } = props;
   const router = useRouter();
-  const { setDone } = useMarkListItemDone(item.listId, item.id);
+  const [setDone] = useMarkListItemDone(item.listId, item.id);
   const completed = item.completedAt != null;
   const notes = item.notes.trim().length > 0;
   const deadline = item.dueAt ? new Date(item.dueAt) : null;

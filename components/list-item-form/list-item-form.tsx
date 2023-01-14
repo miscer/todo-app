@@ -18,7 +18,7 @@ interface FormData {
 export function ListItemForm(props: Props) {
   const { item } = props;
   const router = useRouter();
-  const { update } = useUpdateListItem(item.listId, item.id);
+  const [update] = useUpdateListItem(item.listId, item.id);
   const [deleteItem] = useDeleteListItem(item.listId, item.id);
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {

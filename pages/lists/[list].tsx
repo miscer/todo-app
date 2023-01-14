@@ -18,7 +18,7 @@ interface Props {
 }
 
 function Content(props: Props) {
-  const { list } = useList(props.listId);
+  const [list] = useList(props.listId);
 
   return (
     <>

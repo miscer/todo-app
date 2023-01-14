@@ -8,7 +8,7 @@ interface Props {
 
 export function AddItem(props: Props) {
   const { listId, weight } = props;
-  const { create, isLoading } = useCreateListItem(listId);
+  const [create, { isLoading }] = useCreateListItem(listId);
   const [title, setTitle] = useState("");
 
   const handleSubmit = useCallback(

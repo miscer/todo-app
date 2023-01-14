@@ -8,7 +8,7 @@ export function useLists() {
     createReadFetcher("/api/lists")
   );
 
-  return { lists: data?.lists, error, isLoading };
+  return [data?.lists, { error, isLoading }] as const;
 }
 
 export function useList(listId: string) {
@@ -17,5 +17,5 @@ export function useList(listId: string) {
     createReadFetcher(`/api/lists/${listId}`)
   );
 
-  return { list: data, error, isLoading };
+  return [data, { error, isLoading }] as const;
 }

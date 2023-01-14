@@ -9,7 +9,7 @@ interface Props {
 
 export function ListItems(props: Props) {
   const { listId } = props;
-  const { items } = useListItems(listId);
+  const [items] = useListItems(listId);
 
   const sorted = useMemo(
     () => (items ? [...items].sort((a, b) => a.weight - b.weight) : null),

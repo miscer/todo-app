@@ -17,7 +17,7 @@ export function useListItems(listId: string) {
     createReadFetcher(`/api/items?${query}`)
   );
 
-  return { items: data?.items, error, isLoading };
+  return [data?.items, { error, isLoading }] as const;
 }
 
 export function useListItem(listId: string, itemId: string) {
@@ -26,7 +26,7 @@ export function useListItem(listId: string, itemId: string) {
     createReadFetcher(`/api/items/${itemId}`)
   );
 
-  return { item: data, error, isLoading };
+  return [data, { error, isLoading }] as const;
 }
 
 export function useCreateListItem(listId: string) {
@@ -35,7 +35,7 @@ export function useCreateListItem(listId: string) {
     createUpdateFetcher(`/api/items`, "POST")
   );
 
-  return { create: trigger, error, isLoading: isMutating };
+  return [trigger, { error, isLoading: isMutating }] as const;
 }
 
 export function useUpdateListItem(listId: string, itemId: string) {
@@ -44,7 +44,7 @@ export function useUpdateListItem(listId: string, itemId: string) {
     createUpdateFetcher(`/api/items/${itemId}`, "PUT")
   );
 
-  return { update: trigger, error, isLoading: isMutating };
+  return [trigger, { error, isLoading: isMutating }] as const;
 }
 
 export function useDeleteListItem(listId: string, itemId: string) {
@@ -79,5 +79,5 @@ export function useMarkListItemDone(listId: string, itemId: string) {
     [trigger, itemId]
   );
 
-  return { setDone, error, isLoading: isMutating };
+  return [setDone, { error, isLoading: isMutating }] as const;
 }
