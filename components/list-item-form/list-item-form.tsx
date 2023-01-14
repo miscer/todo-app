@@ -1,5 +1,5 @@
 import { Item } from "@/api-server/types";
-import { Input, Label, TextArea } from "@/components/forms";
+import { Button, Input, Label, TextArea } from "@/components/forms";
 
 interface Props {
   item: Item;
@@ -29,6 +29,12 @@ export function ListItemForm(props: Props) {
           value={item.notes}
           rows={5}
         />
+      </div>
+
+      <div className="flex gap-2">
+        <Button variant="primary">Save</Button>
+        <Button variant="secondary">Cancel</Button>
+        <Button variant="danger">Delete</Button>
       </div>
     </div>
   );

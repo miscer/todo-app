@@ -5,7 +5,7 @@ export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
   const { className, ...rest } = props;
   return (
     <input
-      className={clsx("-m-1 p-1 block bg-slate-200 rounded", className)}
+      className={clsx("p-2 block bg-slate-200 rounded", className)}
       {...rest}
     />
   );
