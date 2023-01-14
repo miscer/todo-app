@@ -1,6 +1,7 @@
 import { Item } from "@/api-server/types";
 import clsx from "clsx";
 import { DeadlineIcon, NotesIcon } from "@/components/list-items/icons";
+import { useMarkListItemDone } from "@/hooks/api/items";
 
 interface Props {
   item: Item;
@@ -8,13 +9,21 @@ interface Props {
 
 export function ListItem(props: Props) {
   const { item } = props;
+  const { setDone } = useMarkListItemDone(item.listId, item.id);
   const completed = item.completedAt != null;
   const notes = item.notes.trim().length > 0;
   const deadline = item.dueAt ? new Date(item.dueAt) : null;
 
   return (
     <li key={item.id} className="py-2 flex items-center">
-      <input type="checkbox" checked={completed} className="mr-2" />
+      <input
+        type="checkbox"
+        checked={completed}
+        className="mr-2"
+        onChange={(event) => {
+          setDone(event.target.checked);
+        }}
+      />
 
       <span
         className={clsx(

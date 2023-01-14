@@ -51,6 +51,27 @@ export const createListItem = rest.post(
   }
 );
 
+export const updateListItem = rest.put(
+  "/api/items/:itemId",
+  async (req, res, ctx) => {
+    const { itemId } = req.params;
+    if (typeof itemId !== "string") {
+      throw new Error("Invalid list ID parameter");
+    }
+
+    const data = await req.json();
+    const attributes = listItemSchema.partial().parse(data);
+
+    const index = items.findIndex((item) => item.id === itemId);
+    if (index < 0) {
+      return res(ctx.status(404));
+    }
+
+    items[index] = { ...items[index], ...attributes };
+    return res(ctx.status(200), ctx.json(items[index]), ctx.delay(300));
+  }
+);
+
 const listItemSchema = z.object({
   title: z.string(),
   dueAt: z.string().datetime().nullable(),

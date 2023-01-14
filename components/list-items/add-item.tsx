@@ -8,14 +8,14 @@ interface Props {
 
 export function AddItem(props: Props) {
   const { listId, weight } = props;
-  const { createListItem, isLoading } = useCreateListItem(listId);
+  const { create, isLoading } = useCreateListItem(listId);
   const [title, setTitle] = useState("");
 
   const handleSubmit = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
 
-      createListItem({
+      create({
         title,
         weight,
         notes: "",
@@ -25,7 +25,7 @@ export function AddItem(props: Props) {
         setTitle("");
       });
     },
-    [title, createListItem, weight]
+    [title, create, weight]
   );
 
   return (
