@@ -1,4 +1,4 @@
-export const createReadFetcher = (url: string) => async (_key: string) => {
+export const createReadFetcher = (url: string) => async () => {
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -27,7 +27,7 @@ export const createUpdateFetcher =
 
 export const createDeleteFetcher =
   (url: string, method = "DELETE") =>
-  async (_key: any) => {
+  async () => {
     const response = await fetch(url, { method });
 
     if (!response.ok) {
