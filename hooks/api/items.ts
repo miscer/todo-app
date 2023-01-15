@@ -38,7 +38,7 @@ export function useListItem(itemId: string) {
 
 type Attributes = Omit<Item, "id">;
 
-export function useCreateListItem(listId: string) {
+export function useCreateListItem() {
   const queryClient = useQueryClient();
 
   const { mutate, error, isLoading } = useMutation<
@@ -48,7 +48,7 @@ export function useCreateListItem(listId: string) {
   >({
     mutationFn: createUpdateFetcher(`/api/items`, "POST"),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["items", listId] });
+      queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
