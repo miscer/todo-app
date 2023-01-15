@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { Item } from "@/api-server/types";
+import { Item } from "@/utils/types";
 import {
   createDeleteFetcher,
   createReadFetcher,

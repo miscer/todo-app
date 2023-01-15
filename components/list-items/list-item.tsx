@@ -1,4 +1,4 @@
-import { Item } from "@/api-server/types";
+import { Item } from "@/utils/types";
 import clsx from "clsx";
 import { DeadlineIcon, NotesIcon } from "@/components/list-items/icons";
 import { ListItemParams, useMarkListItemDone } from "@/hooks/api/items";

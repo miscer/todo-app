@@ -1,6 +1,6 @@
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Item } from "@/api-server/types";
+import { Item } from "@/utils/types";
 import { Button, Input, Label, TextArea } from "@/components/forms";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";

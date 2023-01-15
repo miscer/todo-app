@@ -1,5 +1,5 @@
 import { lists } from "@/api-server/lists";
-import { Item } from "@/api-server/types";
+import { Item } from "@/utils/types";
 import { v4 as uuid } from "uuid";
 import { rest } from "msw";
 import { z } from "zod";

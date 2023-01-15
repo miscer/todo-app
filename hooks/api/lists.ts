@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { List } from "@/api-server/types";
+import { List } from "@/utils/types";
 import { createReadFetcher, createUpdateFetcher } from "./fetchers";
 
 export function useLists() {

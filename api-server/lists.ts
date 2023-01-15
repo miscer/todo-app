@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { List } from "./types";
+import { List } from "@/utils/types";
 import { v4 as uuid } from "uuid";
 import z from "zod";
 
