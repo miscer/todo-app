@@ -9,7 +9,8 @@ interface Props {
 
 export function ListItems(props: Props) {
   const { listId } = props;
-  const [items] = useListItems(listId);
+  const params = useMemo(() => ({ listId }), [listId]);
+  const [items] = useListItems(params);
 
   const sorted = useMemo(
     () => (items ? [...items].sort((a, b) => a.weight - b.weight) : null),
@@ -25,7 +26,7 @@ export function ListItems(props: Props) {
     <div>
       <ul className="divide-y divide-slate-200 border-b border-slate-200">
         {sorted?.map((item) => (
-          <ListItem key={item.id} item={item} />
+          <ListItem key={item.id} params={params} item={item} />
         ))}
       </ul>
 

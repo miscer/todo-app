@@ -7,12 +7,16 @@ import {
   createUpdateFetcher,
 } from "./fetchers";
 
-export function useListItems(listId: string) {
+export interface ListItemParams {
+  listId?: string;
+}
+
+export function useListItems(params: ListItemParams) {
   const query = new URLSearchParams();
-  query.set("list", listId);
+  if (params.listId != null) query.set("list", params.listId);
 
   const { data, error, isLoading } = useQuery<{ items: Item[] }>({
-    queryKey: ["items", listId],
+    queryKey: ["items", params],
     queryFn: createReadFetcher(`/api/items?${query}`),
   });
 
@@ -78,14 +82,14 @@ export function useDeleteListItem(itemId: string) {
   return [mutate, { error, isLoading }] as const;
 }
 
-export function useMarkListItemDone(listId: string, itemId: string) {
+export function useMarkListItemDone(params: ListItemParams, itemId: string) {
   const queryClient = useQueryClient();
 
   const { mutate, error, isLoading } = useMutation({
     mutationFn: createUpdateFetcher(`/api/items/${itemId}`, "PUT"),
     onMutate(attributes) {
       queryClient.setQueryData<{ items: Item[] }>(
-        ["items", listId],
+        ["items", params],
         function (data) {
           if (data == null) return undefined;
 
@@ -98,7 +102,7 @@ export function useMarkListItemDone(listId: string, itemId: string) {
       );
     },
     onSettled() {
-      queryClient.invalidateQueries(["items", listId]);
+      queryClient.invalidateQueries(["items", params]);
     },
   });
 

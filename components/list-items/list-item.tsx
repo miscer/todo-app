@@ -1,18 +1,19 @@
 import { Item } from "@/api-server/types";
 import clsx from "clsx";
 import { DeadlineIcon, NotesIcon } from "@/components/list-items/icons";
-import { useMarkListItemDone } from "@/hooks/api/items";
+import { ListItemParams, useMarkListItemDone } from "@/hooks/api/items";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 interface Props {
+  params: ListItemParams;
   item: Item;
 }
 
 export function ListItem(props: Props) {
-  const { item } = props;
+  const { params, item } = props;
   const router = useRouter();
-  const [setDone] = useMarkListItemDone(item.listId, item.id);
+  const [setDone] = useMarkListItemDone(params, item.id);
   const completed = item.completedAt != null;
   const notes = item.notes.trim().length > 0;
   const deadline = item.dueAt ? new Date(item.dueAt) : null;
