@@ -13,6 +13,24 @@ interface FormValues {
 
 export function AddItem(props: Props) {
   const { listId, weight } = props;
+  const { onSubmit, register, isLoading } = useCreateController(listId, weight);
+
+  return (
+    <div className="py-2">
+      <form onSubmit={onSubmit}>
+        <Input
+          type="text"
+          placeholder="Add item..."
+          className="w-3/4"
+          disabled={isLoading}
+          {...register("title", { required: true })}
+        />
+      </form>
+    </div>
+  );
+}
+
+function useCreateController(listId: string, weight: number) {
   const [create, { isLoading }] = useCreateListItem();
   const { register, reset, handleSubmit } = useForm<FormValues>();
 
@@ -31,17 +49,5 @@ export function AddItem(props: Props) {
     create(attributes, { onSuccess: () => reset() });
   });
 
-  return (
-    <div className="py-2">
-      <form onSubmit={onSubmit}>
-        <Input
-          type="text"
-          placeholder="Add item..."
-          className="w-3/4"
-          disabled={isLoading}
-          {...register("title", { required: true })}
-        />
-      </form>
-    </div>
-  );
+  return { onSubmit, register, isLoading };
 }
