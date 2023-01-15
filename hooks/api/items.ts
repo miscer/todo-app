@@ -19,7 +19,7 @@ export function useListItems(listId: string) {
   return [data?.items, { error, isLoading }] as const;
 }
 
-export function useListItem(listId: string, itemId: string) {
+export function useListItem(itemId: string) {
   const { data, error, isLoading } = useQuery<Item>({
     queryKey: ["item", itemId],
     queryFn: createReadFetcher(`/api/items/${itemId}`),
@@ -47,7 +47,7 @@ export function useCreateListItem(listId: string) {
   return [mutate, { error, isLoading }] as const;
 }
 
-export function useUpdateListItem(listId: string, itemId: string) {
+export function useUpdateListItem(itemId: string) {
   const queryClient = useQueryClient();
 
   const { mutate, error, isLoading } = useMutation<
@@ -65,7 +65,7 @@ export function useUpdateListItem(listId: string, itemId: string) {
   return [mutate, { error, isLoading }] as const;
 }
 
-export function useDeleteListItem(listId: string, itemId: string) {
+export function useDeleteListItem(itemId: string) {
   const queryClient = useQueryClient();
 
   const { mutate, error, isLoading } = useMutation({
