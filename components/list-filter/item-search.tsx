@@ -33,5 +33,6 @@ function useUpdateQuery() {
     [router]
   );
 
+  // debounce updating the URL to prevent sending a request for each keystroke
   return useMemo(() => debounce(updateQuery, 300), [updateQuery]);
 }

@@ -36,7 +36,7 @@ export function useListItem(itemId: string) {
   return [data, { error, isLoading }] as const;
 }
 
-type Attributes = Omit<Item, "id">;
+type ListItemAttributes = Omit<Item, "id">;
 
 export function useCreateListItem() {
   const queryClient = useQueryClient();
@@ -44,10 +44,11 @@ export function useCreateListItem() {
   const { mutate, error, isLoading } = useMutation<
     unknown,
     unknown,
-    Attributes
+    ListItemAttributes
   >({
     mutationFn: createUpdateFetcher(`/api/items`, "POST"),
     onSuccess: () => {
+      // reload all items after creating a new item
       queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
@@ -61,10 +62,11 @@ export function useUpdateListItem(itemId: string) {
   const { mutate, error, isLoading } = useMutation<
     Item,
     unknown,
-    Partial<Attributes>
+    Partial<ListItemAttributes>
   >({
     mutationFn: createUpdateFetcher(`/api/items/${itemId}`, "PUT"),
     onSuccess(data) {
+      // reload all items and update the item in the cache with returned data
       queryClient.invalidateQueries({ queryKey: ["items"] });
       queryClient.setQueryData(["item", itemId], data);
     },
@@ -79,6 +81,7 @@ export function useDeleteListItem(itemId: string) {
   const { mutate, error, isLoading } = useMutation({
     mutationFn: createDeleteFetcher(`/api/items/${itemId}`),
     onSuccess() {
+      // reload all items
       queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
@@ -97,6 +100,7 @@ export function useMarkListItemDone(params: ListItemParams, itemId: string) {
         function (data) {
           if (data == null) return undefined;
 
+          // find the updated item and optimistically update it
           const items = data.items.map((item) =>
             item.id === itemId ? { ...item, ...attributes } : item
           );
@@ -106,6 +110,7 @@ export function useMarkListItemDone(params: ListItemParams, itemId: string) {
       );
     },
     onSettled() {
+      // also reload all items to get fresh data, in case something goes wrong at the server
       queryClient.invalidateQueries(["items", params]);
     },
   });

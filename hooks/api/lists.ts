@@ -20,7 +20,7 @@ export function useList(listId: string) {
   return [data, { error, isLoading }] as const;
 }
 
-interface Attributes {
+interface ListAttributes {
   color: string;
   title: string;
 }
@@ -31,10 +31,11 @@ export function useCreateList() {
   const { mutate, error, isLoading } = useMutation<
     unknown,
     unknown,
-    Attributes
+    ListAttributes
   >({
     mutationFn: createUpdateFetcher(`/api/lists`, "POST"),
     onSuccess: () => {
+      // reload all lists
       queryClient.invalidateQueries({ queryKey: ["lists"] });
     },
   });

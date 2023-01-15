@@ -19,11 +19,13 @@ export function ListItems(props: Props) {
 
   const [items, { isLoading }] = useListItems(params);
 
+  // sort items in ascending order by weight
   const sorted = useMemo(
     () => (items ? [...items].sort((a, b) => a.weight - b.weight) : null),
     [items]
   );
 
+  // weight of the next item needs to be greater than the last item in the list
   const nextWeight =
     items != null && items.length > 0
       ? Math.max(...items.map((item) => item.weight)) + 1
