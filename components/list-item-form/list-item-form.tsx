@@ -1,3 +1,5 @@
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Item } from "@/api-server/types";
 import { Button, Input, Label, TextArea } from "@/components/forms";
 import { useForm } from "react-hook-form";
@@ -21,7 +23,12 @@ export function ListItemForm(props: Props) {
   const router = useRouter();
   const [updateItem] = useUpdateListItem(item.id);
   const [deleteItem] = useDeleteListItem(item.id);
-  const { register, handleSubmit } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: item.title,
       notes: item.notes,
@@ -62,13 +69,18 @@ export function ListItemForm(props: Props) {
   return (
     <form onSubmit={onSubmit}>
       <div className="flex flex-col gap-4 pb-4 w-full max-w-sm">
-        <div className="flex gap-3 items-center">
-          <input type="checkbox" {...register("done")} />
-          <Input
-            type="text"
-            className="flex-grow text-lg"
-            {...register("title")}
-          />
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-3 items-center">
+            <input type="checkbox" {...register("done")} />
+            <Input
+              type="text"
+              className="flex-grow text-lg"
+              {...register("title")}
+            />
+          </div>
+          {errors.title ? (
+            <div className="text-sm text-red-500">{errors.title.message}</div>
+          ) : null}
         </div>
 
         <div className="flex flex-col items-start gap-2">
@@ -105,3 +117,10 @@ export function ListItemForm(props: Props) {
     </form>
   );
 }
+
+const formSchema = z.object({
+  title: z.string().trim().min(1, { message: "Title is required" }),
+  notes: z.string().trim(),
+  done: z.boolean(),
+  deadline: z.string(),
+});
