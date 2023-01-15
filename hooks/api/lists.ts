@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { List } from "@/api-server/types";
-import { createReadFetcher } from "./fetchers";
+import { createReadFetcher, createUpdateFetcher } from "./fetchers";
 
 export function useLists() {
   const { data, error, isLoading } = useQuery<{ lists: List[] }>({
@@ -18,4 +18,26 @@ export function useList(listId: string) {
   });
 
   return [data, { error, isLoading }] as const;
+}
+
+interface Attributes {
+  color: string;
+  title: string;
+}
+
+export function useCreateList() {
+  const queryClient = useQueryClient();
+
+  const { mutate, error, isLoading } = useMutation<
+    unknown,
+    unknown,
+    Attributes
+  >({
+    mutationFn: createUpdateFetcher(`/api/lists`, "POST"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
+    },
+  });
+
+  return [mutate, { error, isLoading }] as const;
 }
