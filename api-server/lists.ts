@@ -3,14 +3,19 @@ import { List } from "./types";
 import { v4 as uuid } from "uuid";
 import z from "zod";
 
-const lists: List[] = [
+export const lists: List[] = [
   {
-    id: "1",
+    id: uuid(),
     title: "Shopping",
     color: "#ffa200",
   },
   {
-    id: "2",
+    id: uuid(),
+    title: "Personal",
+    color: "#00cc2f",
+  },
+  {
+    id: uuid(),
     title: "Work",
     color: "#a20000",
   },

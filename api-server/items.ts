@@ -1,3 +1,4 @@
+import { lists } from "@/api-server/lists";
 import { Item } from "@/api-server/types";
 import { v4 as uuid } from "uuid";
 import { rest } from "msw";
@@ -5,8 +6,8 @@ import { z } from "zod";
 
 const items: Item[] = [
   {
-    id: "1",
-    listId: "1",
+    id: uuid(),
+    listId: lists[0].id,
     title: "Onions",
     dueAt: "2023-01-18T12:30:00Z",
     completedAt: null,
@@ -14,13 +15,40 @@ const items: Item[] = [
     weight: 0,
   },
   {
-    id: "2",
-    listId: "1",
+    id: uuid(),
+    listId: lists[0].id,
     title: "Potatoes",
     dueAt: null,
     completedAt: "2023-01-03T00:00:00Z",
     notes: "The largest you can find",
     weight: 1,
+  },
+  {
+    id: uuid(),
+    listId: lists[1].id,
+    title: "Take out the bins",
+    dueAt: null,
+    completedAt: null,
+    notes: "",
+    weight: 0,
+  },
+  {
+    id: uuid(),
+    listId: lists[1].id,
+    title: "Make an appointment with the doctor",
+    dueAt: "2023-02-13T12:00:00Z",
+    completedAt: null,
+    notes: "",
+    weight: 1,
+  },
+  {
+    id: uuid(),
+    listId: lists[1].id,
+    title: "Submit tax return",
+    dueAt: "2023-03-30T09:00:00Z",
+    completedAt: null,
+    notes: "Call the accountant first, I have no idea how it works...",
+    weight: 2,
   },
 ];
 
