@@ -4,21 +4,26 @@ import { useRouter } from "next/router";
 import { getRouteParam } from "@/utils/router";
 import { ListItems } from "@/components/list-items/list-items";
 import { useList } from "@/hooks/api/lists";
+import { ListFilter } from "@/components/list-filter/list-filter";
 
 export default function ListDetail() {
   const router = useRouter();
   const listId = getRouteParam(router.query, "list");
   if (listId == null) return null;
 
-  return <Content listId={listId} />;
+  const state = getRouteParam(router.query, "state");
+
+  return <Content listId={listId} state={state} />;
 }
 
 interface Props {
   listId: string;
+  state: string | null;
 }
 
 function Content(props: Props) {
-  const [list] = useList(props.listId);
+  const { listId, state } = props;
+  const [list] = useList(listId);
 
   return (
     <>
@@ -31,7 +36,11 @@ function Content(props: Props) {
             {list?.title}
           </h2>
 
-          <ListItems listId={props.listId} />
+          <div className="mb-4">
+            <ListFilter />
+          </div>
+
+          <ListItems listId={listId} state={state} />
         </div>
       </AppLayout>
     </>

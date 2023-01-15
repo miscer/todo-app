@@ -5,11 +5,17 @@ import { useListItems } from "@/hooks/api/items";
 
 interface Props {
   listId: string;
+  state: string | null;
 }
 
 export function ListItems(props: Props) {
-  const { listId } = props;
-  const params = useMemo(() => ({ listId }), [listId]);
+  const { listId, state } = props;
+
+  const params = useMemo(
+    () => ({ listId, state: state ?? undefined }),
+    [listId, state]
+  );
+
   const [items] = useListItems(params);
 
   const sorted = useMemo(
