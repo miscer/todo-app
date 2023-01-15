@@ -65,7 +65,7 @@ export function ListItem(props: Props) {
   );
 }
 
-const deadlineFormat = new Intl.DateTimeFormat("en-GB", {
+const deadlineFormat = new Intl.DateTimeFormat(undefined, {
   dateStyle: "short",
   timeStyle: "short",
 });

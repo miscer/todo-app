@@ -3,12 +3,13 @@ import { Button, Input, Label, TextArea } from "@/components/forms";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useDeleteListItem, useUpdateListItem } from "@/hooks/api/items";
+import { formatDateForInput, parseDateFromInput } from "@/utils/forms";
 
 interface Props {
   item: Item;
 }
 
-interface FormData {
+interface FormValues {
   done: boolean;
   title: string;
   notes: string;
@@ -20,12 +21,12 @@ export function ListItemForm(props: Props) {
   const router = useRouter();
   const [updateItem] = useUpdateListItem(item.id);
   const [deleteItem] = useDeleteListItem(item.id);
-  const { register, handleSubmit } = useForm<FormData>({
+  const { register, handleSubmit } = useForm<FormValues>({
     defaultValues: {
       title: item.title,
       notes: item.notes,
       done: item.completedAt != null,
-      deadline: item.dueAt ? new Date(item.dueAt).toLocaleString() : "",
+      deadline: item.dueAt ? formatDateForInput(new Date(item.dueAt)) : "",
     },
   });
 
@@ -34,7 +35,9 @@ export function ListItemForm(props: Props) {
       title: data.title,
       notes: data.notes,
       completedAt: data.done ? new Date().toISOString() : null,
-      dueAt: data.deadline ? new Date(data.deadline).toISOString() : null,
+      dueAt: data.deadline
+        ? parseDateFromInput(data.deadline).toISOString()
+        : null,
     };
 
     updateItem(attributes, {
@@ -71,7 +74,7 @@ export function ListItemForm(props: Props) {
         <div className="flex flex-col items-start gap-2">
           <Label htmlFor="item-form-deadline">Deadline</Label>
           <Input
-            type="text"
+            type="datetime-local"
             id="item-form-deadline"
             {...register("deadline")}
           />
