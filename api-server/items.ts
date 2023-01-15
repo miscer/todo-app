@@ -34,7 +34,7 @@ export const fetchListItems = rest.get("/api/items", (req, res, ctx) => {
       (query.has("search") ? isSearchMatch(item, query.get("search")!) : true)
   );
 
-  return res(ctx.status(200), ctx.json({ items: listItems }));
+  return res(ctx.status(200), ctx.json({ items: listItems }), ctx.delay(300));
 });
 
 export const fetchListItem = rest.get(
@@ -50,7 +50,7 @@ export const fetchListItem = rest.get(
       return res(ctx.status(404));
     }
 
-    return res(ctx.status(200), ctx.json(items[index]));
+    return res(ctx.status(200), ctx.json(items[index]), ctx.delay(300));
   }
 );
 
@@ -61,7 +61,7 @@ export const createListItem = rest.post("/api/items", async (req, res, ctx) => {
   const listItem = { id: uuid(), ...attributes };
   items.push(listItem);
 
-  return res(ctx.status(201), ctx.json(listItem));
+  return res(ctx.status(201), ctx.json(listItem), ctx.delay(300));
 });
 
 export const updateListItem = rest.put(

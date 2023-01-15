@@ -17,7 +17,7 @@ const lists: List[] = [
 ];
 
 export const fetchLists = rest.get("/api/lists", (req, res, ctx) => {
-  return res(ctx.status(200), ctx.json({ lists }));
+  return res(ctx.status(200), ctx.json({ lists }), ctx.delay(300));
 });
 
 export const createList = rest.post("/api/lists", async (req, res, ctx) => {
@@ -27,7 +27,7 @@ export const createList = rest.post("/api/lists", async (req, res, ctx) => {
   const list = { id: uuid(), ...attributes };
   lists.push(list);
 
-  return res(ctx.status(201), ctx.json(list));
+  return res(ctx.status(201), ctx.json(list), ctx.delay(300));
 });
 
 export const fetchList = rest.get("/api/lists/:listId", (req, res, ctx) => {
@@ -37,7 +37,7 @@ export const fetchList = rest.get("/api/lists/:listId", (req, res, ctx) => {
     return res(ctx.status(404));
   }
 
-  return res(ctx.status(200), ctx.json(list));
+  return res(ctx.status(200), ctx.json(list), ctx.delay(200));
 });
 
 const listSchema = z.object({
