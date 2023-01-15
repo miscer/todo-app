@@ -15,11 +15,11 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/hooks/*": ["hooks/*"],
-      "@/utils/*": ["utils/*"],
-      "@/api-server/*": ["api-server/*"],
-      "@/api-client": ["api-client"]
+      "@/components/*": ["./components/*"],
+      "@/hooks/*": ["./hooks/*"],
+      "@/utils/*": ["./utils/*"],
+      "@/api-server/*": ["./api-server/*"],
+      "@/api-client": ["./api-client"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
