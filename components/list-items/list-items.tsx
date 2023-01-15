@@ -6,14 +6,15 @@ import { useListItems } from "@/hooks/api/items";
 interface Props {
   listId: string;
   state: string | null;
+  search: string | null;
 }
 
 export function ListItems(props: Props) {
-  const { listId, state } = props;
+  const { listId, state, search } = props;
 
   const params = useMemo(
-    () => ({ listId, state: state ?? undefined }),
-    [listId, state]
+    () => ({ listId, state: state ?? undefined, search: search ?? undefined }),
+    [listId, state, search]
   );
 
   const [items] = useListItems(params);

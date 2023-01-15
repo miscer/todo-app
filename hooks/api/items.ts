@@ -10,12 +10,14 @@ import {
 export interface ListItemParams {
   listId?: string;
   state?: string;
+  search?: string;
 }
 
 export function useListItems(params: ListItemParams) {
   const query = new URLSearchParams();
   if (params.listId != null) query.set("list", params.listId);
   if (params.state != null) query.set("state", params.state);
+  if (params.search != null) query.set("search", params.search);
 
   const { data, error, isLoading } = useQuery<{ items: Item[] }>({
     queryKey: ["items", params],

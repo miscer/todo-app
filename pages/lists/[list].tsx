@@ -12,17 +12,19 @@ export default function ListDetail() {
   if (listId == null) return null;
 
   const state = getRouteParam(router.query, "state");
+  const search = getRouteParam(router.query, "search");
 
-  return <Content listId={listId} state={state} />;
+  return <Content listId={listId} state={state} search={search} />;
 }
 
 interface Props {
   listId: string;
   state: string | null;
+  search: string | null;
 }
 
 function Content(props: Props) {
-  const { listId, state } = props;
+  const { listId, state, search } = props;
   const [list] = useList(listId);
 
   return (
@@ -40,7 +42,7 @@ function Content(props: Props) {
             <ListFilter />
           </div>
 
-          <ListItems listId={listId} state={state} />
+          <ListItems listId={listId} state={state} search={search} />
         </div>
       </AppLayout>
     </>
