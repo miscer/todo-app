@@ -27,8 +27,11 @@ const items: Item[] = [
 export const fetchListItems = rest.get("/api/items", (req, res, ctx) => {
   const { searchParams: query } = req.url;
 
-  const listItems = items.filter((item) =>
-    query.has("list") ? item.listId === query.get("list") : true
+  const listItems = items.filter(
+    (item) =>
+      (query.has("list") ? item.listId === query.get("list") : true) &&
+      (query.has("state") ? getItemState(item) === query.get("state") : true) &&
+      (query.has("search") ? isSearchMatch(item, query.get("search")!) : true)
   );
 
   return res(ctx.status(200), ctx.json({ items: listItems }));
@@ -101,6 +104,20 @@ export const deleteListItem = rest.delete(
     return res(ctx.status(200), ctx.delay(300));
   }
 );
+
+function getItemState(item: Item) {
+  if (item.completedAt != null) {
+    return "completed";
+  } else {
+    return "pending";
+  }
+}
+
+function isSearchMatch(item: Item, query: string): boolean {
+  if (item.title.toLowerCase().includes(query.toLowerCase())) return true;
+  if (item.notes.toLowerCase().includes(query.toLowerCase())) return true;
+  return false;
+}
 
 const listItemSchema = z.object({
   listId: z.string(),
