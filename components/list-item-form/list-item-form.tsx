@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Item } from "@/utils/types";
@@ -20,51 +21,9 @@ interface FormValues {
 
 export function ListItemForm(props: Props) {
   const { item } = props;
-  const router = useRouter();
-  const [updateItem] = useUpdateListItem(item.id);
-  const [deleteItem] = useDeleteListItem(item.id);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: item.title,
-      notes: item.notes,
-      done: item.completedAt != null,
-      deadline: item.dueAt ? formatDateForInput(new Date(item.dueAt)) : "",
-    },
-  });
-
-  const onSubmit = handleSubmit(async (data) => {
-    const attributes = {
-      title: data.title,
-      notes: data.notes,
-      completedAt: data.done ? new Date().toISOString() : null,
-      dueAt: data.deadline
-        ? parseDateFromInput(data.deadline).toISOString()
-        : null,
-    };
-
-    updateItem(attributes, {
-      onSuccess() {
-        router.push(`/lists/${item.listId}`);
-      },
-    });
-  });
-
-  const onDelete = () => {
-    deleteItem(undefined, {
-      onSuccess() {
-        router.push(`/lists/${item.listId}`);
-      },
-    });
-  };
-
-  const onCancel = () => {
-    router.push(`/lists/${item.listId}`);
-  };
+  const { onSubmit, register, errors } = useFormController(item);
+  const { onDelete } = useDeleteController(item);
+  const { onCancel } = useCancelController(item);
 
   return (
     <form onSubmit={onSubmit}>
@@ -118,9 +77,72 @@ export function ListItemForm(props: Props) {
   );
 }
 
+function useFormController(item: Item) {
+  const router = useRouter();
+  const [updateItem] = useUpdateListItem(item.id);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: item.title,
+      notes: item.notes,
+      done: item.completedAt != null,
+      deadline: item.dueAt ? formatDateForInput(new Date(item.dueAt)) : "",
+    },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    const attributes = {
+      title: data.title,
+      notes: data.notes,
+      completedAt: data.done ? new Date().toISOString() : null,
+      dueAt: data.deadline
+        ? parseDateFromInput(data.deadline).toISOString()
+        : null,
+    };
+
+    updateItem(attributes, {
+      onSuccess() {
+        router.push(`/lists/${item.listId}`);
+      },
+    });
+  });
+
+  return { onSubmit, register, errors };
+}
+
 const formSchema = z.object({
   title: z.string().trim().min(1, { message: "Title is required" }),
   notes: z.string().trim(),
   done: z.boolean(),
   deadline: z.string(),
 });
+
+function useDeleteController(item: Item) {
+  const router = useRouter();
+  const [deleteItem] = useDeleteListItem(item.id);
+
+  const onDelete = useCallback(() => {
+    deleteItem(undefined, {
+      onSuccess() {
+        router.push(`/lists/${item.listId}`);
+      },
+    });
+  }, [deleteItem, item.listId, router]);
+
+  return { onDelete };
+}
+
+function useCancelController(item: Item) {
+  const router = useRouter();
+
+  const onCancel = useCallback(() => {
+    router.push(`/lists/${item.listId}`);
+  }, [item.listId, router]);
+
+  return { onCancel };
+}
