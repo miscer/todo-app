@@ -25,8 +25,8 @@ interface Props {
 }
 
 function Content(props: Props) {
-  const [list] = useList(props.listId);
-  const [item] = useListItem(props.itemId);
+  const [list, { isLoading: isLoadingList }] = useList(props.listId);
+  const [item, { isLoading: isLoadingItem }] = useListItem(props.itemId);
 
   return (
     <>
@@ -35,9 +35,23 @@ function Content(props: Props) {
       </Head>
       <AppLayout>
         <div className="px-4 border border-slate-400 rounded">
-          <h2 className="my-4 font-bold text-xl" style={{ color: list?.color }}>
-            <Link href={`/lists/${props.listId}`}>{list?.title}</Link>
-          </h2>
+          <div className="my-4">
+            {isLoadingList ? (
+              <div className="h-7 bg-slate-200 rounded-full w-1/2 animate-pulse" />
+            ) : (
+              <h2 className="font-bold text-xl" style={{ color: list?.color }}>
+                <Link href={`/lists/${props.listId}`}>{list?.title}</Link>
+              </h2>
+            )}
+          </div>
+
+          {isLoadingItem ? (
+            <div className="flex flex-col gap-4 pb-4 w-full max-w-sm">
+              <div className="h-7 bg-slate-200 rounded-full w-full animate-pulse" />
+              <div className="h-6 bg-slate-200 rounded-full w-64 animate-pulse" />
+              <div className="h-14 bg-slate-200 rounded-full w-full animate-pulse" />
+            </div>
+          ) : null}
 
           {item != null ? <ListItemForm item={item} /> : null}
         </div>

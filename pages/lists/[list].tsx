@@ -25,7 +25,7 @@ interface Props {
 
 function Content(props: Props) {
   const { listId, state, search } = props;
-  const [list] = useList(listId);
+  const [list, { isLoading }] = useList(listId);
 
   return (
     <>
@@ -34,9 +34,15 @@ function Content(props: Props) {
       </Head>
       <AppLayout>
         <div className="px-4 border border-slate-400 rounded">
-          <h2 className="my-4 font-bold text-xl" style={{ color: list?.color }}>
-            {list?.title}
-          </h2>
+          <div className="my-4">
+            {isLoading ? (
+              <div className="h-7 bg-slate-200 rounded-full w-1/2 animate-pulse" />
+            ) : (
+              <h2 className="font-bold text-xl" style={{ color: list?.color }}>
+                {list?.title}
+              </h2>
+            )}
+          </div>
 
           <div className="mb-4">
             <ListFilter />
