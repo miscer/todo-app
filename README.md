@@ -1,5 +1,7 @@
 # Toodles
 
+**Live app demo is available at [todo-app-michal5.vercel.app](https://todo-app-michal5.vercel.app/).**
+
 ## Technologies used
 
 - Next.js as a framework, although its SSR capabilities are not used here at all. But it's nice to have all the asset compilation, routing, and stuff like that sorted out from the start.
